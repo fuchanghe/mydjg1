@@ -1,0 +1,57 @@
+<!--base.html-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>
+    {% block title %} {% endblock %}
+</title>
+<link href="/static/css/style.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+{% include 'header.html' %}
+<table width="954" border="0" align="center" cellpadding="0" cellspacing="0" class="container">
+ 
+  <tr>
+    <td height="243" align="center" valign="top">
+        {% block topAd %}
+
+	    {% endblock %}
+    </td>
+  </tr>
+  <tr>
+    <td>
+     {% block main %}
+
+     {% endblock %}
+    </td>
+  </tr>
+  <tr style="height:30px;">
+
+  </tr>
+</table>
+
+<table width="954px" border="0" cellspacing="0" cellpadding="0" align="center" style="background-color: #272e31;">
+  <tr>
+    <td width="9"></td>
+    <td>
+      <div style="margin-top:10px;margin-bottom:10px;">
+        <label class="mylink">收银软件系列:</label>
+        <a href="#" class="mylink">免费pos系统</a>&nbsp;
+        <a href="#" class="mylink">免费商场POS系统</a>&nbsp;
+        <a href="#" class="mylink">免费超市POS系统</a>&nbsp;
+        <a href="#" class="mylink">服装POS系统</a>&nbsp;
+        <a href="#" class="mylink">专卖店POS系统</a>&nbsp;
+        <a href="#" class="mylink">免费收银软件</a>&nbsp;
+        <br />
+        <label class="mylink"> Copyright 2012-2013 yihaomen Limited. All right reserved.</label>
+
+      </div>
+    </td>
+    <td align="right">Powered by yihaomen.com</td>
+    <td width="9"></td>
+  </tr>
+</table>
+
+</body>
+</html>

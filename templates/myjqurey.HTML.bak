@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>MODEL PAGE</title>
+<script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    var Ajax = function ()
+    {
+        $.getJSON ("1.json", function (data)
+        {
+            $.each (data, function (i, item)
+            {
+                $ ("#disp").append ("<h3>" + item.username + "</h3>");
+                $ ("#disp").append ("<p>" + item.content + "</p>");
+            });
+        });
+    }
+</script>
+</head>
+<body>
+    <input type="button" value="AjaxÌá½»" onclick="Ajax();" />
+    <div id="disp"></div>
+</body>
+</html>

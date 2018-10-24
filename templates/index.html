@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="/static/js/myscript.js"></script>
+</head>
+<body>
+<h1>Hello!</h1>
+<a href="echarts/">echasrts</a>
+<hr/>
+    {% for post in posts %}
+        <p>
+            <a href="/post/{{post.slug}}">{{post.title|capfirst}}</a>
+        </p>
+    {% endfor%}
+
+<h1>{{now}}</h1>
+<a href="url/">myurl</a>
+
+<p id="demo">A Paragraph</p>
+<button type="button" onclick="myFunction()">Try it</button>
+<img src="/static/images/fb.jpg"/>
+<hr/>
+<form action="/index/" method="post">{% csrf_token %}
+    <input type="text" name="un"/>
+    <input type="password" name="pw"/>
+    <input type="submit" name="提交"/>
+</form>
+</body>
+</html>

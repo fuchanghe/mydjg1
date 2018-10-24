@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+       <script type="text/javascript" src="../static/js/echarts.js"></script>
+       <script type="text/javascript" src="../static/js/clipboard.min.js"></script>
+       <script type="text/javascript" src="../static/js/jquery-3.3.1.min.js"></script>
+       <style type="text/css">
+           .auto-style1 {
+               width: 150px;
+               height: 30px;       }
+
+           td {
+               border: 2px solid black;
+           }
+           .auto-style2 {
+               width: 64px;
+               }
+           .auto-style3 {
+            width: 13px;
+            }
+            .left {
+            float: left;
+            width: 200px;
+            height: 100%;
+            background-color: red;
+           }
+           .right {
+            background-color: orange;
+            margin-left: 210px;
+            height: 100%;
+          }
+        </style>
+        <script type="text/javascript">
+            var s_tr;
+            $(function () {
+
+            //delete
+            $("#btndelete").click(function () {
+                $("#data :checked").parent().parent().remove();
+            });
+            })
+            //select
+            function Select() {
+                $("#data tr").css("background", "")
+                $(this).css("background", "red");
+                s_tr = $(this);
+                var tds = $(this).find("td");
+            }
+        </script>
+   </head>
+   <body style="height: 100%; margin: 0">
+   <div class="left">
+
+       <input id="btndelete" type="button" value="Delete" />
+       <button class="btn">Copy</button>
+       <table id="data" style="text-align: center" class="auto-style1">
+           <tr>
+            <td class="auto-style2">Select</td>
+            <td>Cell</td>
+           </tr>
+       </table>
+   </div>
+       <div id="container" class="right"></div>
+       <script type="text/javascript">
+            var dom = document.getElementById("container");
+            var output = document.getElementById("output");
+            var myChart = echarts.init(dom);
+            var app = {};
+            function getData(xd,yd,x){
+                var data = new Array(xd*yd);
+                for(var k=0; k<xd*yd; k++){
+                    data[k]=new Array(3);
+                    i = parseInt(k / xd);
+                    j = k % xd;
+                    data[k][0] = j;
+                    data[k][1] = i;
+                    data[k][2] = x[k];
+                }
+                return(data);
+            }
+            //option = null;
+            app.title = 'Singel cell';
+            option = {
+                tooltip: {
+                    position: 'top',
+
+                },
+                animation: true,
+                grid: {
+                    //height: '50%',
+                    //y: '10%'
+                    top: '13%'
+                },
+                xAxis: {
+                    type: 'category',
+                    position: 'top',
+                    splitArea: {
+                        show: true
+                    }
+                },
+                yAxis: {
+                    type: 'category',
+                    splitArea: {
+                        show: true
+                    }
+                },
+                dataZoom: [
+                    {
+                        type: 'slider',
+                        show: true,
+                        xAxisIndex: [0],
+                        filterMode: 'empty',
+                        startValue: 0,
+                        endValue: 20,
+                        top: '4%'
+                    },
+                    {
+                        type: 'slider',
+                        show: true,
+                        yAxisIndex: [0],
+                        left: '90%',
+                        start: 0,
+                        end: 100
+                    },
+                ],
+                visualMap: {
+                    min: 0,
+                    max: 20,
+                    calculable: true,
+                    //orient: 'horizontal',
+                    left: '2%',
+                    //bottom: '15%'
+                    top: '10%'
+                },
+                series: [{
+                    name: '',
+                    type: 'heatmap',
+                    data: [],
+                    label: {
+                        normal: {
+                            show: true
+                        }
+                    },
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+            myChart.setOption(option, true);
+            myChart.showLoading();
+            var names = [];
+            var cellnames = new Array();
+            $.ajax({
+                type: 'get',
+                url: '../static/json/dic1.json',
+                dataType: "json",
+                success: function (result) {
+                    var k = 0;
+                    var xname = new Array();
+                    for (var cname in result.cnames){
+                        cellnames["ce" + k.toString()] = result.cnames[k];
+                        xname[k] = "ce" + k.toString();
+                        k++;
+                    }
+
+                    var yname = result.rnames;
+                    var data = getData(xname.length, yname.length, result.data);
+                    myChart.hideLoading();
+                    myChart.setOption({
+                        xAxis: {
+                            data: xname
+                        },
+                        yAxis: {
+                            data: yname
+                        },
+                        series: [{
+                            data: data
+                        }]
+                    });
+                },
+                error: function (errorMsg) {
+                    alert("Errors");
+                    myChart.hideLoading();
+                }
+            });
+            myChart.on('click', function (params) {
+                        var cn = [];
+                        $('#data tr').find('td').each(function() {
+                            if ($(this).index() == "1") {
+                            cn.push($(this).text());
+                            //$('#Result').append($(this).text() + ',');
+                            }
+                        });
+                        //alert(cn)
+                        if($.inArray(params.name, cn) == -1){
+                            var tr = $("#data tr:eq(0)").clone();
+                            var tds = tr.find("td");
+                            tds.eq(0).html("<input type='checkbox'/>");
+                            tds.eq(1).text(params.name);
+                            tr.bind("click", Select);
+                            $("#data").append(tr);
+                        }
+                        else{
+                            alert("It has already existed.");
+                        }
+            });
+            var clipboard = new ClipboardJS('.btn', {
+                  text: function() {
+                        var cnstr = "";
+                        var cn = [];
+                        $('#data tr').find('td').each(function() {
+                            if ($(this).index() == "1") {
+                            tdtxt = $(this).text()
+                            if (tdtxt != "Cell"){
+                            cn.push(tdtxt);
+                            cnstr = cnstr + cellnames[tdtxt] + ";";
+                            }
+                            }
+                        });
+                  //alert(cn[0]);
+                  return cnstr;
+                  }
+                  });
+
+            clipboard.on('success', function(e) {
+                        console.log(e);
+                    });
+
+            clipboard.on('error', function(e) {
+                        console.log(e);
+                    });
+       </script>
+   </body>
+</html>

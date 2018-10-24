@@ -1,0 +1,21 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="UTF-8" />
+<title>MODEL PAGE</title>
+<script type="text/javascript" src="../static/js/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+    var Ajax = function ()
+    {
+        $.getJSON ("../static/json/Bladder_CD8_sc_names.json", function (data)
+        {
+            alert(data);
+        });
+    }
+</script>
+</head>
+<body>
+    <input type="button" value="Ajax" onclick="Ajax();" />
+    <div id="disp"></div>
+</body>
+</html>

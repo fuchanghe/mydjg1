@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="../static/js/jquery-3.3.1.min.js"></script>
+    <style type="text/css">
+       .auto-style1 {
+           width: 34%;
+           height: 30px;
+       }
+
+       td {
+           border: 2px solid black;
+       }
+
+       .auto-style2 {
+           width: 64px;
+           }
+        .auto-style3 {
+        width: 13px;
+        }
+        .left {
+        float: left;
+        width: 300px;
+        height: 300px;
+        background-color: red;
+      }
+      .right {
+        background-color: orange;
+        margin-left: 310px;
+        height: 300px;
+      }
+</style>
+    <script type="text/javascript">
+        var s_tr;
+        $(function () {
+            //添加
+            $("#btnsave").click(function () {
+                if (s_tr == null) {
+                    //复制首行,得到表结构
+                    var tr = $("#data tr:eq(0)").clone();
+                    //得到列,并且加入数据
+                    var tds = tr.find("td");
+                    tds.eq(0).html("<input type='checkbox'/>")
+                    tds.eq(1).text($("#txtname").val().trim());
+                    tr.bind("click", Select);
+                    //把行加入表中
+                    $("#data").append(tr);
+                } else {
+                    alert("现在是修改状态");
+                }
+            });
+            //修改
+            $("#btnupdate").click(function () {
+                //判断是否选中
+                if (s_tr != null) {
+                    var tds = s_tr.find("td");
+                    tds.eq(1).text($("#txtname").val().trim());
+                    //清空文本,加到添加状态
+                    $("#txtname").val("");
+                    s_tr.css("background", "");
+                    s_tr = null;
+                } else {
+                    alert("请选择要修改的文本!");
+                }
+            });
+            //删除
+            $("#btndelete").click(function () {
+                $("#data :checked").parent().parent().remove();
+            });
+        })
+        //选中
+        function Select() {
+            //把所有背景色取消,并加入新的背景色
+            $("#data tr").css("background", "")
+            $(this).css("background", "red");
+            s_tr = $(this);
+            //alert($(this).children());
+            alert($(this).children().next().text());
+            //找到列,并把列的文本值赋给文本框
+            var tds = $(this).find("td");
+            $("#txtname").val(tds.eq(1).text());
+        }
+    </script>
+</head>
+<body>
+<div class="left"></div>
+<div class="right">
+
+
+    姓名：<input id="txtname" type="text" />
+    <input id="btnsave" type="button" value="添加" />
+    <input id="btnupdate" type="button" value="修改" />
+    <input id="btndelete" type="button" value="删除" />
+
+    <table id="data" style="text-align: center" class="auto-style1">
+        <tr>
+            <td class="auto-style2">选 择</td>
+            <td>姓 名</td>
+        </tr>
+ </table>
+</div>
+</body>
+</html>
